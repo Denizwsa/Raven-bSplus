@@ -72,6 +72,8 @@ public class ModuleManager {
     public static Reduce reduce;
     public static SafeWalk safeWalk;
     public static Scaffold scaffold;
+    public static RotationHandler rotationHandler;
+    public static SlotHandler slotHandler;
     public static KeepSprint keepSprint;
     public static Piercing piercing;
     public static GhostHand ghostHand;
@@ -194,6 +196,8 @@ public class ModuleManager {
         this.addModule(noRotate = new NoRotate());
         this.addModule(safeWalk = new SafeWalk());
         this.addModule(scaffold = new Scaffold());
+        this.addModule(rotationHandler = new RotationHandler());
+        this.addModule(slotHandler = new SlotHandler());
         this.addModule(new WaterBucket());
 
         this.addModule(new Manager());

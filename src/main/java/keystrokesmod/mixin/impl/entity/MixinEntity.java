@@ -6,7 +6,7 @@ import keystrokesmod.event.StepHeightEvent;
 import keystrokesmod.event.StrafeEvent;
 import keystrokesmod.module.ModuleManager;
 import keystrokesmod.module.impl.player.SafeWalk;
-import keystrokesmod.module.impl.player.Scaffold;
+import keystrokesmod.module.impl.world.Scaffold;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.entity.Entity;

@@ -224,6 +224,10 @@ public class BlockUtils implements IMinecraftInstance {
         return getBlock(blockPos).isReplaceable(mc.theWorld, blockPos);
     }
 
+    public static boolean isReplaceable(BlockPos blockPos) {
+        return replaceable(blockPos);
+    }
+
     public static boolean canSeeVecBlock(final BlockPos pos, final Vec3 vecPlayer, final Vec3 vecBlockPoint) {
         final MovingObjectPosition mop = mc.theWorld.rayTraceBlocks(vecPlayer, vecBlockPoint, false, false, false);
         if (mop == null) {
