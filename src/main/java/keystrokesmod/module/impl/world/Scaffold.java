@@ -1,5 +1,6 @@
 package keystrokesmod.module.impl.world;
 
+import keystrokesmod.event.ClientRotationEvent;
 import keystrokesmod.event.PreUpdateEvent;
 import keystrokesmod.event.RotationEvent;
 import keystrokesmod.event.SafeWalkEvent;
@@ -36,6 +37,7 @@ import keystrokesmod.utility.BlockUtils;
 import keystrokesmod.utility.ContainerUtils;
 import keystrokesmod.utility.RotationUtils;
 import keystrokesmod.utility.Utils;
+import keystrokesmod.utility.aim.AimSimulator;
 import keystrokesmod.utility.aim.RotationData;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockAir;
@@ -136,12 +138,14 @@ public class Scaffold extends IAutoClicker {
     private IScaffoldRotation activeRotation = new NoneRotation();
     private IScaffoldSprint activeSprint = new DisabledSprint();
     private IScaffoldSchedule activeSchedule = new NormalSchedule();
+    private Float lastYaw = null;
+    private Float lastPitch = null;
 
     public Scaffold() {
         super("Scaffold", keystrokesmod.module.Module.category.world);
         this.registerSetting(descRotation = new DescriptionSetting("Rotation"));
         this.registerSetting(rotationMode = new SliderSetting("Mode", 1, rotationModes));
-        this.registerSetting(aimSpeed = new SliderSetting("Aim speed", 20, 5, 20, 1));
+        this.registerSetting(aimSpeed = new SliderSetting("Aim speed", 20.0, 5.0, 20.0, 0.1));
         this.registerSetting(moveFix = new ButtonSetting("Move fix", false));
         this.registerSetting(strafe = new SliderSetting("Strafe", 0, 0, 90, 1));
         this.registerSetting(descSprint = new DescriptionSetting("Sprint"));
@@ -248,6 +252,8 @@ public class Scaffold extends IAutoClicker {
         noPlace = false;
         totalBlocksPlaced = 0;
         place = false;
+        lastYaw = null;
+        lastPitch = null;
         updateStrategies();
     }
 
@@ -261,6 +267,8 @@ public class Scaffold extends IAutoClicker {
         delay = false;
         highlight.clear();
         KeyBinding.setKeyBindState(mc.gameSettings.keyBindUseItem.getKeyCode(), false);
+        lastYaw = null;
+        lastPitch = null;
         activeRotation.onDisable();
         activeSprint.onDisable();
         activeSchedule.onDisable();
@@ -410,6 +418,28 @@ public class Scaffold extends IAutoClicker {
         }
 
         placeBlock = rayCasted;
+        // Apply rotation to player before placing so server receives correct rotation
+        boolean forceStrict = strafe.getInput() > 0 || motion.getInput() != 1.0 || moveFix.isToggled();
+        if (!activeSchedule.noRotation()) {
+            RotationEvent rotEvent = new RotationEvent(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
+            RotationData rotData = activeRotation.onRotation(placeYaw, placePitch, forceStrict, rotEvent);
+            rotData = activeSprint.onFinalRotation(rotData);
+            if (rotData != null) {
+                boolean instant = Math.abs(aimSpeed.getInput() - aimSpeed.getMax()) < 0.001;
+                float baseY = lastYaw != null ? lastYaw : mc.thePlayer.rotationYaw;
+                float baseP = lastPitch != null ? lastPitch : mc.thePlayer.rotationPitch;
+                float finalY = instant ? rotData.getYaw() : AimSimulator.rotMove(rotData.getYaw(), baseY, (float) aimSpeed.getInput());
+                float finalP = instant ? rotData.getPitch() : AimSimulator.rotMove(rotData.getPitch(), baseP, (float) aimSpeed.getInput());
+                mc.thePlayer.rotationYaw = finalY;
+                mc.thePlayer.rotationPitch = finalP;
+                mc.thePlayer.prevRotationYaw = finalY;
+                mc.thePlayer.prevRotationPitch = finalP;
+                RotationUtils.serverRotations[0] = finalY;
+                RotationUtils.serverRotations[1] = finalP;
+                lastYaw = finalY;
+                lastPitch = finalP;
+            }
+        }
         if (multiPlace.isToggled()) {
             place(placeBlock, true);
         }
@@ -422,15 +452,20 @@ public class Scaffold extends IAutoClicker {
     }
 
     @SubscribeEvent
-    public void onRotation(RotationEvent event) {
+    public void onClientRotation(ClientRotationEvent event) {
         if (!isEnabled() || mc.thePlayer == null) return;
         if (rayCasted == null) return;
         if (activeSchedule.noRotation()) return;
         boolean forceStrict = strafe.getInput() > 0 || motion.getInput() != 1.0 || moveFix.isToggled();
-        RotationData data = activeRotation.onRotation(placeYaw, placePitch, forceStrict, event);
+        float baseY = event.yaw != null ? event.yaw : (lastYaw != null ? lastYaw : mc.thePlayer.rotationYaw);
+        float baseP = event.pitch != null ? event.pitch : (lastPitch != null ? lastPitch : mc.thePlayer.rotationPitch);
+        RotationEvent rotEvent = new RotationEvent(baseY, baseP);
+        RotationData data = activeRotation.onRotation(placeYaw, placePitch, forceStrict, rotEvent);
         data = activeSprint.onFinalRotation(data);
-        event.setYaw(data.getYaw());
-        event.setPitch(data.getPitch());
+        if (data != null) {
+            event.setYaw(data.getYaw());
+            event.setPitch(data.getPitch());
+        }
     }
 
     @SubscribeEvent

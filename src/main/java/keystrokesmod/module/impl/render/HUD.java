@@ -13,6 +13,15 @@ import keystrokesmod.utility.Theme;
 import keystrokesmod.utility.Utils;
 import keystrokesmod.utility.font.FontManager;
 import keystrokesmod.utility.font.RavenFontRenderer;
+import keystrokesmod.utility.notification.NotificationManager;
+import net.minecraft.client.renderer.texture.DynamicTexture;
+import net.minecraft.util.ResourceLocation;
+
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.InputStream;
+import org.lwjgl.opengl.GL11;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
@@ -54,6 +63,17 @@ public class HUD extends Module {
     private static ButtonSetting showWatermark;
     private static TextSetting watermarkText;
     public static String watermarkName = "Raven bS+";
+    private static ButtonSetting showBgImage;
+    private static SliderSetting bgImageOpacity;
+    private static TextSetting bgImagePath;
+    private static SliderSetting bgImageCornerRadius;
+    private static ButtonSetting gradientBg;
+    private static SliderSetting slideInSpeed;
+    public static String backgroundImagePath = "C:\\Users\\deniz\\Desktop\\OIP-3759094112.jpg";
+    public static ResourceLocation backgroundImageTexture = null;
+    public static int backgroundImageWidth = 0;
+    public static int backgroundImageHeight = 0;
+    public static boolean backgroundImageLoaded = false;
     private static final float DEFAULT_POS_X = 5.0f;
     private static final float DEFAULT_POS_Y = 70.0f;
     public static float posX = DEFAULT_POS_X;
@@ -79,6 +99,17 @@ public class HUD extends Module {
                 watermarkName = newName;
             }
         }));
+        this.registerSetting(showBgImage = new ButtonSetting("Show background image", true));
+        this.registerSetting(bgImageOpacity = new SliderSetting("Bg image opacity", 80.0, 0.0, 255.0, 1.0));
+        this.registerSetting(bgImageCornerRadius = new SliderSetting("Bg image radius", 6.0, 0.0, 20.0, 0.5));
+        this.registerSetting(bgImagePath = new TextSetting("Bg image path", backgroundImagePath, "Path to image file...", 256, () -> {
+            String newPath = bgImagePath.getText().trim();
+            if (!newPath.isEmpty()) {
+                backgroundImagePath = newPath;
+                loadBackgroundImage();
+            }
+        }));
+        this.registerSetting(new ButtonSetting("Reload bg image", () -> loadBackgroundImage()));
         this.registerSetting(colorMode = new SliderSetting("Color mode", 0, COLOR_MODES));
         this.registerSetting(hudColor = new ColorSetting("Color", 255, 255, 255));
         this.registerSetting(hudColor2 = new ColorSetting("Color 2", 85, 85, 255));
@@ -91,12 +122,17 @@ public class HUD extends Module {
         this.registerSetting(fontSize = new SliderSetting("Scale", 0.9, 0.5, 2.0, 0.1));
         this.registerSetting(outline = new SliderSetting("Outline", 0, OUTLINE_MODES));
         this.registerSetting(new ButtonSetting("Edit position", () -> mc.displayGuiScreen(new EditScreen())));
-        this.registerSetting(alignRight = new ButtonSetting("Align right", false));
+        this.registerSetting(alignRight = new ButtonSetting("Align right", true));
         this.registerSetting(alphabeticalSort = new ButtonSetting("Alphabetical sort", false));
         this.registerSetting(drawBackground = new ButtonSetting("Draw background", false));
+        this.registerSetting(gradientBg = new ButtonSetting("Gradient background", false));
+        this.registerSetting(slideInSpeed = new SliderSetting("Slide in speed", 1.0, 0.0, 3.0, 0.1));
         this.registerSetting(textShadow = new ButtonSetting("Text shadow", true));
         this.registerSetting(lowercase = new ButtonSetting("Lowercase", false));
         this.registerSetting(showInfo = new ButtonSetting("Show module info", true));
+
+        // Try to load the default background image
+        loadBackgroundImage();
     }
 
     @Override
@@ -125,10 +161,23 @@ public class HUD extends Module {
         if (waveLength != null) {
             waveLength.setVisible(showWaveSettings, this);
         }
+        if (gradientBg != null) {
+            gradientBg.setVisible(drawBackground.isToggled(), this);
+        }
+        if (bgImageOpacity != null) {
+            bgImageOpacity.setVisible(showBgImage.isToggled(), this);
+        }
+        if (bgImageCornerRadius != null) {
+            bgImageCornerRadius.setVisible(showBgImage.isToggled(), this);
+        }
+        if (bgImagePath != null) {
+            bgImagePath.setVisible(showBgImage.isToggled(), this);
+        }
     }
 
     @Override
     public void onEnable() {
+        instance = this;
         guiUpdate();
         ModuleManager.sort();
     }
@@ -137,6 +186,63 @@ public class HUD extends Module {
     public void guiButtonToggled(ButtonSetting buttonSetting) {
         if (buttonSetting == alphabeticalSort || buttonSetting == showInfo) {
             ModuleManager.sort();
+        }
+    }
+
+    public static void loadBackgroundImage() {
+        backgroundImageTexture = null;
+        backgroundImageWidth = 0;
+        backgroundImageHeight = 0;
+        backgroundImageLoaded = false;
+        try {
+            File file = new File(backgroundImagePath);
+            if (!file.exists()) {
+                return;
+            }
+            BufferedImage image = ImageIO.read(file);
+            if (image == null) {
+                return;
+            }
+            int w = image.getWidth();
+            int h = image.getHeight();
+            int maxDim = 512;
+            if (w > maxDim || h > maxDim) {
+                double scale = Math.min((double) maxDim / w, (double) maxDim / h);
+                int newW = Math.max(1, (int) (w * scale));
+                int newH = Math.max(1, (int) (h * scale));
+                BufferedImage resized = new BufferedImage(newW, newH, BufferedImage.TYPE_INT_ARGB);
+                java.awt.Graphics2D g = resized.createGraphics();
+                g.setRenderingHint(java.awt.RenderingHints.KEY_INTERPOLATION, java.awt.RenderingHints.VALUE_INTERPOLATION_BILINEAR);
+                g.drawImage(image, 0, 0, newW, newH, null);
+                g.dispose();
+                image = resized;
+                w = newW;
+                h = newH;
+            }
+            String name = "raven_bg_" + backgroundImagePath.hashCode();
+            backgroundImageTexture = mc.renderEngine.getDynamicTextureLocation(name, new DynamicTexture(image));
+            backgroundImageWidth = w;
+            backgroundImageHeight = h;
+            backgroundImageLoaded = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // Slide-in animation tracking
+    private final java.util.Map<Module, Long> moduleEnableTimestamps = new java.util.HashMap<>();
+    private static final long SLIDE_IN_DURATION_MS = 250L;
+    private static HUD instance;
+
+    public static void onModuleEnabled(Module module) {
+        if (instance != null) {
+            instance.moduleEnableTimestamps.put(module, System.currentTimeMillis());
+        }
+    }
+
+    public static void onModuleDisabled(Module module) {
+        if (instance != null) {
+            instance.moduleEnableTimestamps.put(module, System.currentTimeMillis());
         }
     }
 
@@ -204,6 +310,11 @@ public class HUD extends Module {
         double lastBackgroundBottom = 0.0;
         boolean removeVelocity = ModuleManager.antiKnockback.isEnabled();
 
+        // Track total arraylist bounds for background image
+        int totalListWidth = 0;
+        int renderedRows = 0;
+        float listStartY = yPos;
+
         try {
             for (Module module : ModuleManager.organizedModules) {
                 if (!module.isEnabled() || module == this || shouldSkipModule(module, removeVelocity)) {
@@ -230,12 +341,47 @@ public class HUD extends Module {
                     outlineRight = backgroundRight + outlineThickness;
                 }
 
+                // Slide-in animation offset
+                float slideOffset = 0.0f;
+                float slideSpeedMultiplier = (float) Math.max(0.1, slideInSpeed.getInput());
+                Long enabledAt = moduleEnableTimestamps.get(module);
+                if (enabledAt != null && slideSpeedMultiplier > 0) {
+                    long elapsed = System.currentTimeMillis() - enabledAt;
+                    long animDuration = (long) (SLIDE_IN_DURATION_MS / slideSpeedMultiplier);
+                    if (elapsed < animDuration) {
+                        float progress = (float) elapsed / animDuration;
+                        float eased = 1.0f - (float) Math.pow(1.0 - progress, 3.0);
+                        slideOffset = (1.0f - eased) * 20.0f;
+                    } else {
+                        moduleEnableTimestamps.remove(module);
+                    }
+                }
+                if (alignRight.isToggled()) {
+                    backgroundLeft += slideOffset;
+                    backgroundRight += slideOffset;
+                    outlineLeft += slideOffset;
+                    outlineRight += slideOffset;
+                    xPos += slideOffset;
+                } else {
+                    backgroundLeft -= slideOffset;
+                    backgroundRight -= slideOffset;
+                    outlineLeft -= slideOffset;
+                    outlineRight -= slideOffset;
+                    xPos -= slideOffset;
+                }
+
                 double rowCenterX = (backgroundLeft + backgroundRight) * 0.5;
                 double wavePhase = hudWavePhase(verticalWaveAccum, rowCenterX);
                 int color = getHudColor(wavePhase);
 
                 if (drawBackground.isToggled()) {
-                    RenderUtils.drawRect(backgroundLeft, backgroundTop, backgroundRight, backgroundBottom, BACKGROUND_COLOR);
+                    if (gradientBg != null && gradientBg.isToggled()) {
+                        int topColor = new Color(0, 0, 0, 90).getRGB();
+                        int bottomColor = new Color(0, 0, 0, 140).getRGB();
+                        RenderUtils.drawVerticalGradientRect((float) backgroundLeft, (float) backgroundTop, (float) backgroundRight, (float) backgroundBottom, topColor, bottomColor);
+                    } else {
+                        RenderUtils.drawRect(backgroundLeft, backgroundTop, backgroundRight, backgroundBottom, BACKGROUND_COLOR);
+                    }
                 }
 
                 if (outline.getInput() == 1 && firstVisibleRow) {
@@ -284,6 +430,11 @@ public class HUD extends Module {
                 lastOutlineRight = outlineRight;
                 lastBackgroundBottom = backgroundBottom;
                 yPos += rowHeight;
+
+                // Track bounds for background image
+                int rowWidth = (int) (backgroundRight - backgroundLeft);
+                if (rowWidth > totalListWidth) totalListWidth = rowWidth;
+                renderedRows++;
             }
         }
         catch (Exception exception) {
@@ -296,6 +447,51 @@ public class HUD extends Module {
             double bottomPhase = hudWavePhase(verticalWaveAccum, bottomCenterX);
             RenderUtils.drawRect(lastOutlineLeft, lastBackgroundBottom, lastOutlineRight, lastBackgroundBottom + outlineThickness, getHudColor(bottomPhase));
         }
+
+        // Render background image behind the entire arraylist
+        if (showBgImage != null && showBgImage.isToggled()
+                && backgroundImageLoaded && backgroundImageTexture != null
+                && renderedRows > 0) {
+            float padding = 4.0f;
+            float imgX = alignRight.isToggled() ? (posX - totalListWidth - padding) : (posX - padding);
+            float imgY = listStartY - padding;
+            int imgRenderW = totalListWidth + Math.round(padding * 2);
+            int imgRenderH = (int) ((float) (yPos - listStartY) + padding * 2);
+            int opacity = (int) bgImageOpacity.getInput();
+            int color = (opacity << 24) | 0x00FFFFFF;
+            float cornerRadius = (float) bgImageCornerRadius.getInput();
+
+            // Draw the image as the background using drawIcon-style rendering with custom size
+            mc.getTextureManager().bindTexture(backgroundImageTexture);
+            float a = ((color >>> 24) & 0xFF) / 255f;
+            float r = ((color >> 16) & 0xFF) / 255f;
+            float g = ((color >> 8) & 0xFF) / 255f;
+            float b = (color & 0xFF) / 255f;
+            net.minecraft.client.renderer.GlStateManager.color(r, g, b, a);
+            net.minecraft.client.renderer.GlStateManager.enableBlend();
+            GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+            net.minecraft.client.renderer.GlStateManager.disableDepth();
+            GL11.glPushMatrix();
+            GL11.glTranslatef(imgX, imgY, 0f);
+            // Maintain aspect ratio of the image
+            float aspectRatio = (float) backgroundImageWidth / (float) backgroundImageHeight;
+            int drawW = imgRenderW;
+            int drawH = imgRenderH;
+            if ((float) imgRenderW / (float) imgRenderH > aspectRatio) {
+                drawW = Math.round(imgRenderH * aspectRatio);
+            } else {
+                drawH = Math.round(imgRenderW / aspectRatio);
+            }
+            float drawX = (imgRenderW - drawW) / 2.0f;
+            float drawY = (imgRenderH - drawH) / 2.0f;
+            net.minecraft.client.gui.Gui.drawModalRectWithCustomSizedTexture(
+                    (int) drawX, (int) drawY, 0, 0, drawW, drawH, backgroundImageWidth, backgroundImageHeight);
+            GL11.glPopMatrix();
+            net.minecraft.client.renderer.GlStateManager.color(1f, 1f, 1f, 1f);
+            net.minecraft.client.renderer.GlStateManager.enableDepth();
+        }
+
+        NotificationManager.render();
     }
 
     public static int getLongestModule() {

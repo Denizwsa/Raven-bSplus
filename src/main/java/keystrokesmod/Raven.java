@@ -42,7 +42,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-@Mod(modid = "keystrokes", name = "Raven bS+", version = "KMV5", acceptedMinecraftVersions = "[1.8.9]")
+@Mod(modid = "keystrokes", name = "Raven bS+", version = "1.3.3+1", acceptedMinecraftVersions = "[1.8.9]")
 public class Raven {
     public static boolean DEBUG = false;
 

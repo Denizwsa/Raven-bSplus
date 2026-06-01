@@ -59,6 +59,7 @@ public class ModuleManager {
     public static Blink blink;
     public static Chams chams;
     public static HUD hud;
+    public static Notifications notifications;
     public static PotionHUD potionHUD;
     public static Timer timer;
     public static Fly fly;
@@ -220,6 +221,7 @@ public class ModuleManager {
         this.addModule(new FallView());
         this.addModule(new Holdlook());
         this.addModule(hud = new HUD());
+        this.addModule(notifications = new Notifications());
         this.addModule(new Indicators());
         this.addModule(new ItemESP());
         this.addModule(new ItemPhysics());

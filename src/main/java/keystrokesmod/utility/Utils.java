@@ -802,6 +802,25 @@ public class Utils implements IMinecraftInstance {
         return darkenedColor;
     }
 
+    public static int brightenColor(int color, double percent) {
+        int alpha = (color >> 24) & 0xFF;
+        int red   = (color >> 16) & 0xFF;
+        int green = (color >> 8)  & 0xFF;
+        int blue  = color & 0xFF;
+
+        double p = percent / 100.0;
+        red   = (int)(red + (255 - red) * p);
+        green = (int)(green + (255 - green) * p);
+        blue  = (int)(blue + (255 - blue) * p);
+
+        red   = clamp(red);
+        green = clamp(green);
+        blue  = clamp(blue);
+
+        int brightenedColor = (alpha << 24) | (red << 16) | (green << 8) | blue;
+        return brightenedColor;
+    }
+
     public static boolean isTeammate(Entity entity) {
         try {
             Entity teamMate = entity;
