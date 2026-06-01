@@ -51,6 +51,7 @@ sourceSets.main {
 repositories {
     mavenCentral()
     maven("https://repo.polyfrost.cc/releases/")
+    maven("https://maven.scijava.org/content/repositories/public/")
 }
 
 val shadowImpl: Configuration by configurations.creating {
@@ -74,6 +75,7 @@ dependencies {
     }
     annotationProcessor("org.spongepowered:mixin:0.8.5-SNAPSHOT")
     shadowImpl("org.java-websocket:Java-WebSocket:1.6.0")
+    shadowImpl("club.minnced:java-discord-rpc:1.3.6")
 }
 
 tasks.withType(JavaCompile::class) {

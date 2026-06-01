@@ -59,6 +59,7 @@ public class ModuleManager {
     public static Blink blink;
     public static Chams chams;
     public static HUD hud;
+    public static Notifications notifications;
     public static PotionHUD potionHUD;
     public static Timer timer;
     public static Fly fly;
@@ -72,8 +73,7 @@ public class ModuleManager {
     public static Reduce reduce;
     public static SafeWalk safeWalk;
     public static Scaffold scaffold;
-    public static RotationHandler rotationHandler;
-    public static SlotHandler slotHandler;
+    public static DiscordPresence discordPresence;
     public static KeepSprint keepSprint;
     public static Piercing piercing;
     public static GhostHand ghostHand;
@@ -196,8 +196,7 @@ public class ModuleManager {
         this.addModule(noRotate = new NoRotate());
         this.addModule(safeWalk = new SafeWalk());
         this.addModule(scaffold = new Scaffold());
-        this.addModule(rotationHandler = new RotationHandler());
-        this.addModule(slotHandler = new SlotHandler());
+        this.addModule(discordPresence = new DiscordPresence());
         this.addModule(new WaterBucket());
 
         this.addModule(new Manager());
@@ -220,6 +219,7 @@ public class ModuleManager {
         this.addModule(new FallView());
         this.addModule(new Holdlook());
         this.addModule(hud = new HUD());
+        this.addModule(notifications = new Notifications());
         this.addModule(new Indicators());
         this.addModule(new ItemESP());
         this.addModule(new ItemPhysics());
@@ -245,6 +245,7 @@ public class ModuleManager {
         movementFix.enable();
         antiBot.enable();
         hud.enable();
+        discordPresence.enable();
         modules.sort(Comparator.comparing(Module::getName));
     }
 

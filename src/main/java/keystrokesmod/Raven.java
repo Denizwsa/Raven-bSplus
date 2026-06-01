@@ -42,7 +42,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 
-@Mod(modid = "keystrokes", name = "Raven bS+", version = "KMV5", acceptedMinecraftVersions = "[1.8.9]")
+@Mod(modid = "keystrokes", name = "Raven bS+", version = "1.3.3+2", acceptedMinecraftVersions = "[1.8.9]")
 public class Raven {
     public static boolean DEBUG = false;
 
@@ -75,6 +75,9 @@ public class Raven {
     public void init(FMLInitializationEvent e) {
         Runtime.getRuntime().addShutdownHook(new Thread(scheduledExecutor::shutdown));
         Runtime.getRuntime().addShutdownHook(new Thread(cachedExecutor::shutdown));
+        Runtime.getRuntime().addShutdownHook(new Thread(keystrokesmod.utility.discord.DiscordRP::shutdown));
+
+        keystrokesmod.utility.discord.DiscordRP.tryInit();
 
         ClientCommandHandler.instance.registerCommand(new KeyStrokeCommand());
 

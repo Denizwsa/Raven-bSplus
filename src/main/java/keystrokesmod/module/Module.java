@@ -143,6 +143,8 @@ public class Module {
             }
             this.onEnable();
         }
+        keystrokesmod.utility.notification.NotificationManager.notify(this.getName(), keystrokesmod.utility.notification.Notification.Type.ENABLE);
+        keystrokesmod.module.impl.render.HUD.onModuleEnabled(this);
     }
 
     public void disable() {
@@ -160,6 +162,8 @@ public class Module {
             }
             this.onDisable();
         }
+        keystrokesmod.utility.notification.NotificationManager.notify(this.getName(), keystrokesmod.utility.notification.Notification.Type.DISABLE);
+        keystrokesmod.module.impl.render.HUD.onModuleDisabled(this);
     }
 
     public String getInfo() {
