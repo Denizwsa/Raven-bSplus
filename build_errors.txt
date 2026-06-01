@@ -1,0 +1,129 @@
+Starting a Gradle Daemon, 1 busy and 2 incompatible and 1 stopped Daemons could not be reused, use --status for details
+
+> Configure project :
+Architectury Loom: 0.10.0.5
+
+> Task :compileJava
+Note: SpongePowered MIXIN Annotation Processor Version=0.8.5
+Note: Supported obfuscation types: ObfuscationServiceMCP supports [searge,notch] ObfuscationServiceFabric supports [official:intermediary,official:named,intermediary:official,intermediary:named,named:official,named:intermediary]
+Note: Loading named:intermediary mappings from /home/deniz/.gradle/caches/essential-loom/1.8.9/de.oceanlabs.mcp.mcp_stable.1_8_9.22-1.8.9-forge-1.8.9-11.15.1.2318-1.8.9/mappings-mixin-srg.tiny
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/mixin/impl/entity/MixinEntityLivingBase.java:56: warning: Unable to determine descriptor for @Inject target method
+    @Inject(method = { "updateDistance", "func_110146_f" }, at = @At("HEAD"), cancellable = true)
+    ^
+Note: Writing refmap to /home/deniz/Masaüstü/mod/raven-bs/build/classes/java/main/mixins.raven.refmap.json
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/mixin/impl/client/MixinMovementInputFromOptions.java:27: warning: @Overwrite is missing javadoc comment
+    public void updatePlayerMoveState() {
+                ^
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/mixin/impl/entity/MixinEntity.java:48: warning: @Overwrite is missing javadoc comment
+    public void moveFlying(float strafe, float forward, float friction) {
+                ^
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/mixin/impl/entity/MixinEntity.java:85: warning: @Overwrite is missing javadoc comment
+    protected final Vec3 getVectorForRotation(float pitch, float yaw) {
+                         ^
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/mixin/impl/entity/MixinEntityPlayer.java:60: warning: @Overwrite is missing javadoc comment
+    public void attackTargetEntityWithCurrentItem(Entity targetEntity) {
+                ^
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/mixin/impl/entity/MixinEntityPlayerSP.java:148: warning: @Overwrite is missing javadoc comment
+    public void onUpdateWalkingPlayer() {
+                ^
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/mixin/impl/entity/MixinEntityPlayerSP.java:244: warning: @Overwrite is missing javadoc comment
+    public void onLivingUpdate() {
+                ^
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/mixin/impl/entity/MixinEntityLivingBase.java:99: warning: @Overwrite is missing javadoc comment
+    protected void jump() {
+                   ^
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/mixin/impl/world/MixinBlock.java:24: warning: @Overwrite is missing javadoc comment
+    public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity) {
+                ^
+Note: Writing refmap to /home/deniz/Masaüstü/mod/raven-bs/build/classes/java/main/mixins.raven.refmap.json
+Note: Writing named:intermediary output TinyMappings to /home/deniz/Masaüstü/mod/raven-bs/build/loom-cache/mixin-map-de.oceanlabs.mcp.mcp_stable.1_8_9.22-1.8.9-forge-1.8.9-11.15.1.2318-1.8.9.1.tiny
+Note: Writing refmap to /home/deniz/Masaüstü/mod/raven-bs/build/classes/java/main/mixins.raven.refmap.json
+Note: Writing refmap to /home/deniz/Masaüstü/mod/raven-bs/build/classes/java/main/mixins.raven.refmap.json
+Note: Writing named:intermediary output TinyMappings to /home/deniz/Masaüstü/mod/raven-bs/build/loom-cache/mixin-map-de.oceanlabs.mcp.mcp_stable.1_8_9.22-1.8.9-forge-1.8.9-11.15.1.2318-1.8.9.1.tiny
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/clickgui/components/impl/CategoryComponent.java:257: error: cannot find symbol
+            ClickGui clickGui = Minecraft.getMinecraft().currentScreen instanceof ClickGui ? (ClickGui) Minecraft.getMinecraft().currentScreen : null;
+            ^
+  symbol:   class ClickGui
+  location: class CategoryComponent
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/clickgui/components/impl/CategoryComponent.java:257: error: cannot find symbol
+            ClickGui clickGui = Minecraft.getMinecraft().currentScreen instanceof ClickGui ? (ClickGui) Minecraft.getMinecraft().currentScreen : null;
+                                                                                  ^
+  symbol:   class ClickGui
+  location: class CategoryComponent
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/clickgui/components/impl/CategoryComponent.java:257: error: cannot find symbol
+            ClickGui clickGui = Minecraft.getMinecraft().currentScreen instanceof ClickGui ? (ClickGui) Minecraft.getMinecraft().currentScreen : null;
+                                                                                              ^
+  symbol:   class ClickGui
+  location: class CategoryComponent
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/clickgui/components/impl/CategoryComponent.java:378: error: cannot find symbol
+            ClickGui clickGui = Minecraft.getMinecraft().currentScreen instanceof ClickGui ? (ClickGui) Minecraft.getMinecraft().currentScreen : null;
+            ^
+  symbol:   class ClickGui
+  location: class CategoryComponent
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/clickgui/components/impl/CategoryComponent.java:378: error: cannot find symbol
+            ClickGui clickGui = Minecraft.getMinecraft().currentScreen instanceof ClickGui ? (ClickGui) Minecraft.getMinecraft().currentScreen : null;
+                                                                                  ^
+  symbol:   class ClickGui
+  location: class CategoryComponent
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/clickgui/components/impl/CategoryComponent.java:378: error: cannot find symbol
+            ClickGui clickGui = Minecraft.getMinecraft().currentScreen instanceof ClickGui ? (ClickGui) Minecraft.getMinecraft().currentScreen : null;
+                                                                                              ^
+  symbol:   class ClickGui
+  location: class CategoryComponent
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/clickgui/components/impl/CategoryComponent.java:395: error: cannot find symbol
+        ClickGui clickGui = Minecraft.getMinecraft().currentScreen instanceof ClickGui ? (ClickGui) Minecraft.getMinecraft().currentScreen : null;
+        ^
+  symbol:   class ClickGui
+  location: class CategoryComponent
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/clickgui/components/impl/CategoryComponent.java:395: error: cannot find symbol
+        ClickGui clickGui = Minecraft.getMinecraft().currentScreen instanceof ClickGui ? (ClickGui) Minecraft.getMinecraft().currentScreen : null;
+                                                                              ^
+  symbol:   class ClickGui
+  location: class CategoryComponent
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/clickgui/components/impl/CategoryComponent.java:395: error: cannot find symbol
+        ClickGui clickGui = Minecraft.getMinecraft().currentScreen instanceof ClickGui ? (ClickGui) Minecraft.getMinecraft().currentScreen : null;
+                                                                                          ^
+  symbol:   class ClickGui
+  location: class CategoryComponent
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/clickgui/components/impl/CategoryComponent.java:565: error: cannot find symbol
+        ClickGui clickGui = Minecraft.getMinecraft().currentScreen instanceof ClickGui ? (ClickGui) Minecraft.getMinecraft().currentScreen : null;
+        ^
+  symbol:   class ClickGui
+  location: class CategoryComponent
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/clickgui/components/impl/CategoryComponent.java:565: error: cannot find symbol
+        ClickGui clickGui = Minecraft.getMinecraft().currentScreen instanceof ClickGui ? (ClickGui) Minecraft.getMinecraft().currentScreen : null;
+                                                                              ^
+  symbol:   class ClickGui
+  location: class CategoryComponent
+/home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/clickgui/components/impl/CategoryComponent.java:565: error: cannot find symbol
+        ClickGui clickGui = Minecraft.getMinecraft().currentScreen instanceof ClickGui ? (ClickGui) Minecraft.getMinecraft().currentScreen : null;
+                                                                                          ^
+  symbol:   class ClickGui
+  location: class CategoryComponent
+Note: /home/deniz/Masaüstü/mod/raven-bs/src/main/java/keystrokesmod/mixin/impl/render/MixinRenderEntityItem.java uses or overrides a deprecated API.
+Note: Recompile with -Xlint:deprecation for details.
+Note: Some input files use unchecked or unsafe operations.
+Note: Recompile with -Xlint:unchecked for details.
+12 errors
+9 warnings
+
+> Task :compileJava FAILED
+
+FAILURE: Build failed with an exception.
+
+* What went wrong:
+Execution failed for task ':compileJava'.
+> Compilation failed; see the compiler error output for details.
+
+* Try:
+> Run with --info option to get more log output.
+> Run with --scan to get full insights.
+
+Deprecated Gradle features were used in this build, making it incompatible with Gradle 9.0.
+
+You can use '--warning-mode all' to show the individual deprecation warnings and determine if they come from your own scripts or plugins.
+
+For more on this, please refer to https://docs.gradle.org/8.8/userguide/command_line_interface.html#sec:command_line_warnings in the Gradle documentation.
+
+BUİLD FAILED in 2m 7s
+1 actionable task: 1 executed
