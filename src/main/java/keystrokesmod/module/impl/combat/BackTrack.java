@@ -86,21 +86,12 @@ public class BackTrack extends Module {
         if (!isEnabled() || !Utils.nullCheck()) {
             return;
         }
-        if (ModuleManager.scaffold != null && ModuleManager.scaffold.isEnabled()) {
-            releaseAll();
-            incomingPackets.clear();
-            outgoingPackets.clear();
-            return;
-        }
         handleIncoming(event);
     }
 
     @SubscribeEvent
     public void onSendPacket(SendPacketEvent event) {
         if (!isEnabled() || !Utils.nullCheck()) {
-            return;
-        }
-        if (ModuleManager.scaffold != null && ModuleManager.scaffold.isEnabled()) {
             return;
         }
         if (!legit.getValue()) {
