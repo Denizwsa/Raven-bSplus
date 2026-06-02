@@ -13,7 +13,6 @@ public class DiscordPresence extends Module {
         this.registerSetting(new DescriptionSetting("Internal Discord Rich Presence updater"));
         this.ignoreOnSave = true;
         this.hidden = true;
-        this.alwaysOn = true;
     }
 
     @Override

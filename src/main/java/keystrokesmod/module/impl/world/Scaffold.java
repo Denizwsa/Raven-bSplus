@@ -1,10 +1,10 @@
 package keystrokesmod.module.impl.world;
 
-import keystrokesmod.event.ClientRotationEvent;
 import keystrokesmod.event.PreMotionEvent;
 import keystrokesmod.event.PreUpdateEvent;
 import keystrokesmod.event.SafeWalkEvent;
 import keystrokesmod.event.ScaffoldPlaceEvent;
+import keystrokesmod.helper.RotationHelper;
 import keystrokesmod.module.Module;
 import keystrokesmod.module.ModuleManager;
 import keystrokesmod.module.setting.impl.ButtonSetting;
@@ -21,7 +21,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.util.*;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import org.lwjgl.input.Keyboard;
 
@@ -206,6 +205,9 @@ public class Scaffold extends Module {
 
         if (rotMode == 1) {
             applySmoothedRotation(placeYaw, placePitch, speed);
+        } else if (rotMode == 2 || rotMode == 3) {
+            RotationHelper.get().setYaw(placeYaw);
+            RotationHelper.get().setPitch(placePitch);
         }
 
         placeBlock = rayCasted;
@@ -216,17 +218,6 @@ public class Scaffold extends Module {
         }
 
         handleSprintInPreUpdate();
-    }
-
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onClientRotation(ClientRotationEvent e) {
-        if (mc.thePlayer == null || mc.theWorld == null) return;
-        if (placeBlock == null) return;
-        int rotMode = (int) mode.getInput();
-        if (rotMode == 2 || rotMode == 3) {
-            e.setYaw(placeYaw);
-            e.setPitch(placePitch);
-        }
     }
 
     @SubscribeEvent
@@ -258,8 +249,8 @@ public class Scaffold extends Module {
         if (stepP < 0.1f) stepP = Math.abs(dp);
         float newY = baseY + Math.signum(dy) * Math.min(Math.abs(dy), stepY);
         float newP = MathHelper.clamp_float(baseP + Math.signum(dp) * Math.min(Math.abs(dp), stepP), -90f, 90f);
-        RotationUtils.serverRotations[0] = newY;
-        RotationUtils.serverRotations[1] = newP;
+        RotationHelper.get().setYaw(newY);
+        RotationHelper.get().setPitch(newP);
         lastYaw = newY;
         lastPitch = newP;
     }
