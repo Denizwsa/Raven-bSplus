@@ -34,6 +34,7 @@ public class ModuleManager {
 
     public static NameHider nameHider;
     public static FastPlace fastPlace;
+    public static Scaffold scaffold;
     public static MurderMystery murderMystery;
     public static InvMove invmove;
     public static SkyWars skyWars;
@@ -183,6 +184,7 @@ public class ModuleManager {
         this.addModule(new DelayRemover());
         this.addModule(fastMine = new FastMine());
         this.addModule(fastPlace = new FastPlace());
+        this.addModule(scaffold = new Scaffold());
         this.addModule(new FakeLag());
         this.addModule(new Freecam());
         this.addModule(hideWindow = new HideWindow());
