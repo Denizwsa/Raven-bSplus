@@ -57,3 +57,9 @@ Raven Bs, kullanıcı gizliliği temeline dayanarak ve herkese cilalanmış, yü
 - Bu depoyu (repository) klonlayın.
 - IDE'nizin (örn: IntelliJ) Gradle sekmesinde Gradle JVM'ini Java 17 JDK veya daha yüksek bir sürüme ayarlayın, Project SDK'yı ise Java 1.8 JDK olarak ayarlayın.
 - İçe aktarma (import) işlemi bittikten sonra projeyi Gradle ile derleyebilirsiniz.
+---
+<div align="center">
+
+[![Buy me a coffee](https://img.buymeacoffee.com/button-api/?text=Buy%20me%20a%20coffee&emoji=%E2%98%95&slug=denizkwsa&button_colour=FFDD00&font_colour=000000&font_family=Cookie&outline_colour=000000&coffee_colour=ffffff)](https://buymeacoffee.com/denizkwsa)
+
+</div>
